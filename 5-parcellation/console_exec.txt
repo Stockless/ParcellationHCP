@@ -1,0 +1,1 @@
+python3 parcelation.py --output-dir outputFolder --Lvlabels-file lh_labels.txt --Rvlabels-file rh_labels.txt --Intersection-dir intersection --parcel-names atlas_info.txt --LVtk-file lh.obj --RVtk-file rh.obj

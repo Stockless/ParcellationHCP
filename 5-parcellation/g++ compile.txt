@@ -1,0 +1,3 @@
+g++ -std=c++11 -fopenmp -c -Wall -O3 *.cpp
+g++ -std=c++11 -fopenmp *.o -o main
+./main ../lh.obj ../rh.obj 1 6 outputFolder/final_atlas/ outputFolder/final_atlas/ outputFolder/final_atlas/final_parcels/left/ outputFolder/final_atlas/final_parcels/right/
