@@ -58,7 +58,6 @@ def triangles_per_fascicle(hemi_dict, sp_dict):
                 sp_dict[k][tri] = v
 
 
-#Lhemi_path =r'\\wsl$\Ubuntu-18.04\home\joaquin\joaquin\pmt_mt\pruebas\prueba_079\Archi\079\079\079\lh.obj'.replace('\\','/') ;
 Lhemi_path = 'rh.obj' ;
 Lvertex, Lpolygons = BT.read_mesh_obj(Lhemi_path)
 Lhemi = vt.Polygon(Lvertex, Lpolygons);
@@ -67,8 +66,6 @@ render = vt.Render();
 render.AddActor(Lhemi);
 
 Lneighbors = BT.mesh_neighbors(Lpolygons)
-#Rneighbors = bt.mesh_neighbors(Rpolygons)
-#Left_bundles_intersec = os.listdir(r'\\wsl$\Ubuntu-18.04\home\joaquin\joaquin\pmt_mt\pruebas\prueba_079\Archi\079\079\Mesh_Intersection\Left'.replace('\\','/'));
 Left_bundles_intersec = os.listdir('intersection');
 
 Atlas_L_fasc_dict = defaultdict(lambda: defaultdict(float))
@@ -76,26 +73,11 @@ Atlas_Lhemi_dict = defaultdict(lambda: defaultdict(int))
 
 #Left_bundles_intersec = [Left_bundles_intersec[3]]  #9 Ver solo uno
 for bundle in Left_bundles_intersec:
-    #print(bundle)
-    #ix_path_lh = r'\\wsl$\Ubuntu-18.04\home\joaquin\joaquin\pmt_mt\pruebas\prueba_079\Archi\079\079\Mesh_Intersection\Left'+'/'+bundle
-    #ix_path_lh = ix_path_lh.replace('\\','/')
-
     ix_path_lh = 'intersection'+'/'+bundle
     ix_path_lh = ix_path_lh.replace('\\','/')
-    #ix_path_rh = r'\\wsl$\Ubuntu-18.04\home\cris\Memoria2021\Archi\002\002\Mesh_Intersection\Right\align_cluster_subject_to_rh_PoC-PrC_0.intersectiondata'.replace('\\','/')
-    #print(ix_path_lh)
-    #fibers = r'\\wsl$\Ubuntu-18.04\home\joaquin\joaquin\pmt_mt\pruebas\prueba_079\Archi\079\079\Fasciculos_T1\LEFT' + '/'+bundle[:len(bundle)-16]+'bundles'
-    #fibers = fibers.replace('\\','/')
     print(bundle)
-    #fibers_lh = BT.read_bundle(fibers)
-
-    #fibers_rh = BT.read_bundle(r'\\wsl$\Ubuntu-18.04\home\cris\Memoria2021\Archi\002\002\Fasciculos_T1\Right\align_cluster_subject_to_rh_PoC-PrC_0.bundles'.replace('\\','/'))
-
-    #Lhemi_path =r'\\wsl$\Ubuntu-18.04\home\joaquin\joaquin\pmt_mt\pruebas\prueba_079\Archi\079\079\079\lh.obj'.replace('\\','/') ; # left hemisphere path
-    #Rhemi_path = r'\\wsl$\Ubuntu-18.04\home\cris\MemoriaARCHI\Archi\002\002\002\rh.obj'.replace('\\','/') ; # right hemisphere path
 
     InTri, FnTri, InPoints, FnPoints, fib_index = read_intersection(ix_path_lh);
-    #print(InTri, FnTri)
 
     tri = vt.Polygon(Lvertex, Lpolygons[InTri])
     tri.setColor((1.0,1.0/4,1.0/4))

@@ -1,13 +1,14 @@
 import os
-import random
 import numpy as np
 import sys
-#import utils.bundleTools as bt
-import bundleTools3 as bt3
-# import utils.visualizationTools as vt
+import re
 from dipy.segment.metric import mdf
 from dipy.segment.metric import dist
 from dipy.segment.metric import EuclideanMetric
+
+#Imports bundleTools3 from parent directory
+sys.path.append('../bundleTools')
+import bundleTools3 as bt3
 
 def align_bundle(bundle, ref):
     aligned_bundle = []
@@ -34,11 +35,11 @@ def get_files(path):
             files.append(file)
     return files
 
-path = sys.argv[1]
+path = sys.argv[1] #bundles path
 bundles = get_files(path)
 
 for bundle in bundles:
-    name = "_".join(bundle.split("_")[2:])
+    name = "_".join(bundle.split("_")[-2:len(bundle)]) #saves the name of the regions of the bundle e.g "AR_ANT.bundles"
     bundle = bt3.read_bundle(path + bundle)
     centroid = calculate_centroid(bundle)
 

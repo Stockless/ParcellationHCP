@@ -4,13 +4,22 @@
     Andrea Vázquez Varela
 Last modification: 24-10-2018
 
+C code for resampling fibers of a bundle to N points
+Python code for aligning the fibers of the bundles as them can be dissaligned on their ends within its bundles
+
+# Python modules
+- dipy
+- numpy
 
 # Compile: 
 g++ -std=c++14 -O3 main.cpp -o main -fopenmp -ffast-math
 
 # Execute:
-./main 21 Data/subs/001/tractography-filtered.bundles subject atlas/bundles atlas/atlas_info.txt results_folder
+./main resample_points tractography.bundles subject_number path/to/atlas path/to/atlas_info.txt results_folder
+Example: ./main 21 Data/subs/001/tractography-filtered.bundles 001 atlas/bundles atlas/atlas_info.txt resampled_output
 
+Once resampled run the align_bundles.py for bundle fibers alignment
+python align_bundles.py 
 
 # Cite: 
 

@@ -1,5 +1,3 @@
-import bundleTools as BT
-import bundleTools3 as BT3
 import numpy as np
 import os
 import sys
@@ -13,7 +11,12 @@ from dipy.segment.metric import mdf
 from dipy.segment.metric import dist
 from subprocess import call
 
-subjects_path = os.getcwd() + '/Data/'
+#Import bundleTools from parent directory
+sys.path.append('../bundleTools')
+import bundleTools as BT
+import bundleTools3 as BT3
+
+subjects_path = sys.argv[1]
 subjects_list = os.listdir(subjects_path);
 
 for subject in subjects_list:
