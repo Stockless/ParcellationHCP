@@ -236,7 +236,6 @@ void write_intersection(const std::string &path, const std::string &pathBundles,
 
 			const uint32_t len_fibInd = fib_index[i].size();
 			file<<len_fibInd<<std::endl;
-
 			for(uint32_t j=0; j<InTri[i].size(); j++) // writes index of each initial triangle
 				file<<InTri[i][j]<<" ";
 			file<<std::endl;

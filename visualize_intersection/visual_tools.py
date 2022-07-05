@@ -232,7 +232,7 @@ class Points(Visualization):
         self._myPolygonActor.GetProperty().SetPointSize(pointSize);
     
 # visualiza los actors
-def showPolygons(Polygons,mesh=False):
+def showPolygons(Polygons):
     # The usual rendering stuff.
     camera = vtk.vtkCamera();
     camera.SetPosition(1,1,1);
@@ -247,9 +247,6 @@ def showPolygons(Polygons,mesh=False):
     
     for polygon in Polygons:
         renderer.AddActor(polygon._myPolygonActor);
-    if mesh:
-        print(type(mesh))
-        renderer.AddActor(mesh)
     renderer.SetActiveCamera(camera);
     renderer.ResetCamera();
     renderer.SetBackground(1,1,1);
@@ -267,7 +264,7 @@ def showPolygons(Polygons,mesh=False):
     
     
 
-def visual_allpoints(all_points,mesh=False):
+def visual_allpoints(all_points,mesh=False,in_tri=False,fn_tri=False):
       
     myActors = [];
 
@@ -277,7 +274,11 @@ def visual_allpoints(all_points,mesh=False):
         body.setJetScalar();
         myActors.append(body);    
     
-    myActors.append(mesh)
+    if mesh:
+        myActors.append(mesh)
+    if fn_tri:
+        myActors.append(in_tri)
+        myActors.append(fn_tri)
     showPolygons(myActors);
     
 def visual_centroids(cen_points):

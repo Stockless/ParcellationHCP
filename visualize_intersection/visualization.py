@@ -58,7 +58,7 @@ def triangles_per_fascicle(hemi_dict, sp_dict):
                 sp_dict[k][tri] = v
 
 
-Lhemi_path = 'rh.obj' ;
+Lhemi_path = 'lh.obj' ;
 Lvertex, Lpolygons = BT.read_mesh_obj(Lhemi_path)
 Lhemi = vt.Polygon(Lvertex, Lpolygons);
 Lhemi.setOpacity(1.0)
@@ -121,8 +121,9 @@ triangles_per_fascicle(Atlas_Lhemi_dict, Atlas_L_fasc_dict)
 dir = os.listdir('bundles/');
 bundles = []
 for bundle in dir:
-    print()
-    bundles.append(BT.read_bundle(dir+bundle))
+    if bundle[-1] == 'a':
+        continue
+    bundles.append(BT.read_bundle('bundles/'+bundle))
 for bundle in bundles:
     for fiber in bundle:
         fib = vt.Line(fiber)

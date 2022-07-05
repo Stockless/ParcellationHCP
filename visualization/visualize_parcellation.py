@@ -17,7 +17,7 @@ def load_restricted_triangles():
     
     with open('pickles/Rnope.pkl', 'rb') as f:
         Rrestricted = set(pickle.load(f))
-    #Lrestricted, Rrestricted = {},{}
+    Lrestricted, Rrestricted = {},{}
     return Lrestricted, Rrestricted
 
 def load_parcels (parcels, parcels_path): #hard cc final
@@ -113,19 +113,6 @@ def visualize_parcellation(meshes_path, L_sp, R_sp, sub, seed = False):
 
     #     #Se renderizan los triángulos y polígonos.
     #     sp_tri = vt.Polygon(Lvertex, Lpolygons[v_restricted]);
-    #     sp_tri.setColor((color[0], color[1], color[2]));
-    #     render.AddActor(sp_tri);
-
-    # #Ídem para el derecho
-    # for k, v in R_sp.items():
-    #     color = paleta[fp.index(k)]
-    
-    #     if len(v) == 0:
-    #         continue
-    
-    #     v_restricted = list(set(v)) #list(set(v).difference(Rrestricted))
-    
-    #     sp_tri = vt.Polygon(Rvertex, Rpolygons[v_restricted]);
     #     sp_tri.setColor((color[0], color[1], color[2]));
     #     render.AddActor(sp_tri);
 

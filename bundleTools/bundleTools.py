@@ -392,7 +392,7 @@ def read_transformed_mesh_obj( infile ):
 def write_bundle( outfile, points ):
 
   #write bundles file
-  f = open( outfile + 'data','w' )
+  f = open( outfile + 'data','wb' )
   ncount = len( points )
   for i in range( ncount ):
     f.write(N.array( [ len( points[ i ] ) ], N.int32 ).tostring() )

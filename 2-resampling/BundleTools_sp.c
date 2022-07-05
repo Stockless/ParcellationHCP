@@ -17,21 +17,20 @@ struct bundle read_bundle(char* bunfile){
     FILE *fb;
     fb = fopen(bunfile, "r");
     if (fb == NULL) {fputs ("File error",stderr); exit (1);}
-
     char buffer[100];   //buffer para la linea
     fgets(buffer,100,fb);//Lecturas para llegar la liena 5 del archivo
     fgets(buffer,100,fb);
     fgets(buffer,100,fb);
     fgets(buffer,100,fb);
     fgets(buffer,100,fb);
-    int index_i=0;//Indice posición inicial de los numeros
+    int index_i=0;//Indice posiciï¿½n inicial de los numeros
     for(i=0;i<sizeof(buffer);i++){
-        if(buffer[i]>=48 && buffer[i]<=57){//Detecta cuando hay un número en la línea leída y guarda el índice
+        if(buffer[i]>=48 && buffer[i]<=57){//Detecta cuando hay un nï¿½mero en la lï¿½nea leï¿½da y guarda el ï¿½ndice
             index_i=i;
             break;
         }
     }
-    int index_f=index_i;//Indice posición final de los números
+    int index_f=index_i;//Indice posiciï¿½n final de los nï¿½meros
     int32_t nfibers=0;   // variable para numero de fibras
     while(buffer[index_f]!=44){//Mientras no se detecte una coma aumenta el otro indice de la pos final
         index_f++;

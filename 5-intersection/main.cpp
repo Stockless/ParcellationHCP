@@ -22,8 +22,10 @@ int main(int argc, char const *argv[])
 
 	read_bundles(argv[3], nLBundles, nLFibers, nLPoints, LPoints);
 	std::cout<<"Readed Left Bundles"<<std::endl;
+	std::cout<<"nLBundles: "<<nLBundles<<std::endl;
 	read_bundles(argv[4], nRBundles, nRFibers, nRPoints, RPoints);
 	std::cout<<"Readed Right Bundles"<<std::endl;
+	std::cout<<"nRBundles: "<<nRBundles<<std::endl;
 
 	// =========================== Intersección ===========================================
 	const uint32_t nPtsLine = 2;

@@ -4,6 +4,7 @@ import os;
 import numpy as np;
 import subprocess as sp;
 from time import time;
+import sys
 
 def read_intersection( infile ):
     
@@ -24,7 +25,8 @@ def read_intersection( infile ):
     
 #========================== Cálculo de intersección ==========================================    
 subs = 1
-for i in range(1,subs+1):
+sub = int(sys.argv[5])
+for i in range(sub,sub+1):
 
     t1 = time();
     
@@ -36,19 +38,22 @@ for i in range(1,subs+1):
             
     print(sub);
     
-    Lhemi_path = 'lh.obj'; # left hemisphere path
-    Rhemi_path = 'rh.obj'; # left hemisphere path
+    Lhemi_path = sys.argv[1]; # left hemisphere path
+    Rhemi_path = sys.argv[2]; # left hemisphere path
     
     #Lbundles_path = os.getcwd() + '/../../../../MT/Narciso_Andrea/subs/001/tractography-streamline-regularized-deterministic_resampled_filtered_trm_ffclust/aligned_individual_clusters/';
-    Rbundles_path = 'bunds/rh/'; # bundles path
-    Lbundles_path = 'bunds/lh/'; # bundles path
+    Lbundles_path = sys.argv[3]; # bundles path
+    Rbundles_path = sys.argv[4]; # bundles path
     #Rbundles_path = os.getcwd() + '/ARCHI database/short fibers/001/right-hemi/'; # right bundles path
     
-    Lintersection_path = os.getcwd() + '/intersection/' + sub + '_left-hemi/'; # left intersection path
-    Rintersection_path = os.getcwd() + '/intersection/' + sub + '_right-hemi/'; # right intersection path
+    Lintersection_path = os.getcwd() + '/intersection/' + sub + '/' + sub + '_left-hemi/'; # left intersection path
+    Rintersection_path = os.getcwd() + '/intersection/' + sub + '/' + sub + '_right-hemi/'; # right intersection path
     
     if not os.path.exists(os.getcwd() + '/intersection/'):
         os.mkdir(os.getcwd() + '/intersection/');
+    
+    if not os.path.exists(os.getcwd() + '/intersection/'+ sub):
+        os.mkdir(os.getcwd() + '/intersection/'+sub)
     
     sp.call(['make']);
     sp.call(['./interx', Lhemi_path, Rhemi_path, Lbundles_path, Rbundles_path, Lintersection_path, Rintersection_path]);

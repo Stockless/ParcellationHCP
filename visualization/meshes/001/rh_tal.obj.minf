@@ -1,6 +1,0 @@
-attributes = {
-    'data_type' : 'VOID',
-    'file_type' : 'WAVEFRONT',
-    'polygon_dimension' : 3,
-    'uuid' : '217ec66e-61e4-576e-a372-df7865831093'
-  }

@@ -3,4 +3,4 @@
   gcc BundleTools_sp.c resampling.c -o resampling -lm
 
 ### Execute 
-  ./resampling OverSampledFibers\tractography-streamline-regularized-deterministic_001.bundles resampled-tractography.bundles 21
+  ./resampling ../../Data/002/tractography-streamline-regularized-deterministic_002.bundles resampled-tractography_002.bundles 21

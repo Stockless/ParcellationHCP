@@ -20,7 +20,7 @@ subjects_path = sys.argv[1]
 subjects_list = os.listdir(subjects_path);
 
 for subject in subjects_list:
-    print(subject)
+    print("Merging subject: "+subject)
     if(subject != 'meshes_obj'):
         #Juntar 3 tractografias en un solo archivo .bundles
         all_points=[]

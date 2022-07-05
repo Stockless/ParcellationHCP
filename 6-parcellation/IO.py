@@ -109,10 +109,14 @@ def read_intersection_file(infile,subject_name,name,parcel_names,triangles,anato
     with open(infile) as f:
         content = f.readlines()
         if (content[0] != '0\n'):
-            bundle_name = re.split("[-_.]",name)[2:]
-            # print(bundle_name)
+            start = name.find("lh")
+            if start == -1:
+                start = name.find("rh")
+            bundle_name = re.split("[-_.]",name[start+3:])
             bundle_name.pop(-1)
+            print(bundle_name)
             if len(bundle_name) == 1:
+                return anatomic_parcels,parcel_names
                 bundle_name.append(bundle_name[0])
             # print(bundle_name)
             bundle_index = ""
@@ -124,7 +128,7 @@ def read_intersection_file(infile,subject_name,name,parcel_names,triangles,anato
 
             anatomic_parcel1 = anatomic_parcels[anatomic_label1]
             anatomic_parcel2 = anatomic_parcels[anatomic_label2]
-            print("labels: ",anatomic_label1,anatomic_label2)
+            # print("labels: ",anatomic_label1,anatomic_label2)
             if (bundle_name[0] != bundle_name[1]):
                 parcel1_name = bundle_name[0]+"_"+bundle_name[1]+bundle_index
                 parcel2_name = bundle_name[1]+"_"+bundle_name[0]+bundle_index
@@ -189,10 +193,7 @@ def read_intersection (intersection_path,parcel_names,triangles,anatomic_parcels
         intersectionDir = os.listdir(intersection_path+"/"+subj_dir+"/"+subj_dir.split("_")[0]+"_"+selected_hemi)
         intersectionDir.sort()
         for file in intersectionDir:
-            # print(file.split("_"))
-            if len(file.split("_")) == 4:
-                # print(file.split())
-                continue
+            print(file)
             file_path = intersection_path+"/"+subj_dir+"/"+subj_dir.split("_")[0]+"_"+selected_hemi+"/"+file
             anatomic_parcels,parcel_names = read_intersection_file(file_path,subject_name,file,parcel_names,triangles,anatomic_parcels)
     return anatomic_parcels,parcel_names

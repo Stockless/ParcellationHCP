@@ -195,7 +195,7 @@ def read_bundle( infile ):
   num = bytes / 4
 
   num_count = 0
-  f = open( bun_file )
+  f = open( bun_file , 'rb' )
   while num_count < num:
 
     p = N.frombuffer( f.read( 4 ), 'i' )[ 0 ] # numero de puntos de la fibra
