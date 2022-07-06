@@ -1,20 +1,19 @@
-/*
-# Copyright (C) 2019  Andrea Vázquez Varela
+// # Copyright (C) 2019  Andrea Vázquez Varela
 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+// # This program is free software: you can redistribute it and/or modify
+// # it under the terms of the GNU General Public License as published by
+// # the Free Software Foundation, either version 3 of the License, or
+// # (at your option) any later version.
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+// # This program is distributed in the hope that it will be useful,
+// # but WITHOUT ANY WARRANTY; without even the implied warranty of
+// # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// # GNU General Public License for more details.
 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// # You should have received a copy of the GNU General Public License
+// # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-main.cpp
+/* main.cpp
 Authors:  
     Narciso López López
     Andrea Vázquez Varela
@@ -147,7 +146,7 @@ float discarded_21points (vector<float> &subject_data, vector<float> &atlas_data
             max_ed = ed;
         inv--;
     }
-    //After pass the comprobation of euclidean distance, will be tested with the length factor
+    //After pass the comprobation of euclidean distance, will be tested with the lenght factor
     unsigned int fiber_pos = (ndata_fiber*fiber_index);
     unsigned int atlas_pos = (ndata_fiber*fatlas_index);
     float length_fiber1 = euclidean_distance_norm(subject_data[fiber_pos],subject_data[fiber_pos+1], subject_data[fiber_pos+2],
@@ -208,7 +207,7 @@ void write_bundles(string subject_name, string output_path, vector<vector<float>
     for (unsigned int i = 0; i<assignment.size();i++){
         if (assignment[i].size()!=0){
             string bundlesdata_path = output_path+"/"+subject_name+"_to_"+names[i]+".bundlesdata";
-            char * bundlesdata_file = &bundlesdata_path[0];
+            char * bundlesdata_file = str_to_char_array(bundlesdata_path);
             FILE *fp = fopen(bundlesdata_file, "wb"); 	// Opening and writing .bundlesdata file.
             if (fp == NULL) {fputs ("File error opening .bundlesdata file\n",stderr); exit (1);}
             for (unsigned int j = 0; j < assignment[i].size(); j ++) {
@@ -228,6 +227,7 @@ void write_bundles(string subject_name, string output_path, vector<vector<float>
                        <<"    \'space_dimension\' : 3"<<endl
                        <<"  }"<<endl;
             bundlesfile.close();
+            delete(bundlesdata_file);
         }
     }
     delete(output_folder);
@@ -239,7 +239,6 @@ vector<float> read_bundles(string path, unsigned short int ndata_fiber) {
     char path2[path.length()+1];
     strncpy(path2, path.c_str(), sizeof(path2));
     path2[sizeof(path2) - 1] = 0;
-    cout<<path2<<endl;
     FILE *fp = fopen(path2, "rb");
 	 // Open subject file.
     if (fp == NULL) {fputs ("File error opening file\n",stderr); exit (1);}
@@ -268,7 +267,7 @@ vector<float> read_bundles(string path, unsigned short int ndata_fiber) {
 vector<float> get_atlas_bundles(string path, vector<string> names,unsigned short int ndata_fiber){
     vector<float> atlas_bundles;
     for (unsigned int i = 0; i<names.size();i++){
-        string file_path = path + "/atlas_" +names[i] + ".bundlesdata";
+        string file_path = path + "/" +names[i] + ".bundlesdata";
         vector<float> bundle = read_bundles(file_path,ndata_fiber);
         atlas_bundles.insert( atlas_bundles.end(), bundle.begin(), bundle.end() );
     }
@@ -281,7 +280,7 @@ void read_atlas_info(string path, vector<string> &names, vector<unsigned char> &
 
     ifstream infile(path, ios::in );
     if( !infile )
-        cerr << "Cant open atlas info" << endl;
+        cerr << "Cant open " << endl;
 
     string name;
     unsigned short int t;
@@ -289,7 +288,7 @@ void read_atlas_info(string path, vector<string> &names, vector<unsigned char> &
     while (infile >> name >> t >> n)
     {
         names.push_back(name);
-        thres.push_back(t);
+        thres.push_back(t+10);
         nfibers_atlas += n;
         fibers_per_bundle.push_back(n);
     }
@@ -375,12 +374,12 @@ vector<vector<float>> get_centroids(vector<vector<float>> &atlas_data, unsigned 
     return final_centroids;
 }
 
-vector<unsigned short> parallel_segmentation(vector<float> &atlas_data, vector<float> &subject_data,
+vector<unsigned char> parallel_segmentation(vector<float> &atlas_data, vector<float> &subject_data,
                                   unsigned short int ndata_fiber, vector<unsigned char> thresholds,
                                   vector<unsigned int> &bundle_of_fiber){
     unsigned int nfibers_subject = subject_data.size()/ndata_fiber;
     unsigned int nfibers_atlas = atlas_data.size()/ndata_fiber;
-    vector<unsigned short> assignment(nfibers_subject,65534);
+    vector<unsigned char> assignment(nfibers_subject,254);
     //vector<float> euclidean_distances(nfibers_subject,500.0);
     // unsigned int nunProc = omp_get_num_procs();
     unsigned int nunProc = omp_get_num_procs();
@@ -391,7 +390,7 @@ vector<unsigned short> parallel_segmentation(vector<float> &atlas_data, vector<f
 #pragma omp for schedule(auto) nowait
         for (unsigned long i = 0; i < nfibers_subject; i++) {
             float ed_i = 500;
-            unsigned short assignment_i = 65534;
+            char assignment_i = 254;
             for (unsigned int j = 0; j < nfibers_atlas; j++) {
                 bool is_inverted, is_discarded;
                 float ed = -1;
@@ -418,7 +417,7 @@ vector<unsigned short> parallel_segmentation(vector<float> &atlas_data, vector<f
                     }
                 }
             }
-            if (assignment_i!=65534) {
+            if (assignment_i!=254) {
                 assignment[i]=assignment_i;
             }
 
@@ -438,7 +437,6 @@ int main (int argc, char *argv[])
     string atlas_path = argv[4];
     string atlas_inf = argv[5];
     string output_dir = argv[6];
-    cout<<"asdasd"<<endl;
 
     //Number of coord of each fiber
     unsigned short int ndata_fiber = n_points*3;
@@ -452,8 +450,10 @@ int main (int argc, char *argv[])
     vector<unsigned int> bundle_of_fiber;
     vector<float> atlas_data;
     vector<vector<float>> atlas_centroids;
+
     //Subject data
     vector<float> subject_data;
+
     //Read the atlas information file and get the number of bundles of the atlas
     read_atlas_info(atlas_inf, bundles_names, thresholds, nfibers_atlas,fibers_per_bundle);
     //nbundles_atlas = bundles_names.size();
@@ -469,7 +469,7 @@ int main (int argc, char *argv[])
     subject_data = read_bundles(subject_path+"data", ndata_fiber);
 
 
-    vector<unsigned short> assignment;
+    vector<unsigned char> assignment;
     time_start_paralell = omp_get_wtime();
     //for (int i = 0; i<5; i++)
     assignment = parallel_segmentation(atlas_data,subject_data,ndata_fiber,thresholds,bundle_of_fiber);
@@ -480,14 +480,14 @@ int main (int argc, char *argv[])
     vector<vector<float>> map_results(bundles_names.size());
     //Map assignment
     for (unsigned int j = 0; j<assignment.size();j++) {
-        if (assignment[j] != 65534){
+        if (assignment[j] != 254){
             map_results[assignment[j]].push_back(j);
         }
     }
 
     int count = 0;
     for (unsigned int i = 0; i<assignment.size();i++){
-        if (assignment[i]!=65534) {
+        if (assignment[i]!=254) {
             count++;
             // cout<<assignment[i]<<endl;
         }
@@ -501,4 +501,3 @@ int main (int argc, char *argv[])
     //cout<<"Execution time of centroids: "<<time_centroids_end;
     return 0;
 }
-

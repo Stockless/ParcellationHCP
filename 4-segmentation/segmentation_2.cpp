@@ -282,6 +282,7 @@ vector<float> read_bundles(string path, unsigned short int ndata_fiber) {
     char path2[path.length()+1];
     strncpy(path2, path.c_str(), sizeof(path2));
     path2[sizeof(path2) - 1] = 0;
+    cout<<path2<<endl;
     FILE *fp = fopen(path2, "rb");
 	 // Open subject file.
     if (fp == NULL) {fputs ("File error opening file\n",stderr); exit (1);}
@@ -334,7 +335,7 @@ void read_atlas_info(string path, vector<string> &names, vector<float> &thres,
     {
         cout<<name<<" "<<t<<" "<<n<<endl;
         names.push_back(name);
-        thres.push_back(t);
+        thres.push_back(t+100);
         nfibers_atlas += n;
         fibers_per_bundle.push_back(n);
         //cout<< name << " "<< to_string(t)<<" "<< to_string(n) << endl;
@@ -503,7 +504,7 @@ int main (int argc, char *argv[])
     string atlas_path = argv[4];
     string atlas_inf = argv[5];
     string output_dir = argv[6];
-    string indices_output_dir = argv[7];
+    string indices_output_dir = "indices_out";
 
     //Number of coord of each fiber
     unsigned short int ndata_fiber = n_points*3;

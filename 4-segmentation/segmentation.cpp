@@ -334,7 +334,7 @@ void read_atlas_info(string path, vector<string> &names, vector<unsigned char> &
     while (infile >> name >> t >> n)
     {
         names.push_back(name);
-        thres.push_back(t);
+        thres.push_back(t-3);
         nfibers_atlas += n;
         fibers_per_bundle.push_back(n);
     }
