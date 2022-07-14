@@ -1,8 +1,8 @@
 attributes = {
     'binary' : 1,
-    'bundles' : ['points', 0],
+    'bundles' : [ 'lh_LOF-Or_0', 0 ],
     'byte_order' : 'DCBA',
-    'curves_count' : 25,
+    'curves_count' : 39,
     'data_file_name' : '*.bundlesdata',
     'format' : 'bundles_1.0',
     'space_dimension' : 3

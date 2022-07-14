@@ -182,7 +182,7 @@ void write_bundles(const string &pathBundles, const std::string output_path, uin
     for(unsigned int z = 0; z < bundlesDir.size(); z++){
     	//std::cout << bundlesDir[z] << std::endl;
     	string bundlesdata_path = output_path + bundlesDir[z] + ".bundlesdata";
-	    char * bundlesdata_file = str_to_char_array(bundlesdata_path);
+	    char * bundlesdata_file = &bundlesdata_path[0];
 	    FILE *fp = fopen(bundlesdata_file, "wb"); 	// Opening and writing .bundlesdata file.
 	    if (fp == NULL) {fputs ("File error opening .bundlesdata file\n",stderr); exit (1);}
 
@@ -213,7 +213,7 @@ void write_bundles(const string &pathBundles, const std::string output_path, uin
 	               <<"    \'space_dimension\' : 3"<<endl
 	               <<"  }"<<endl;
 	    bundlesfile.close();
-	    delete(bundlesdata_file);
+	    // delete(bundlesdata_file);
     }	
 }
 

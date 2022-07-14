@@ -247,7 +247,7 @@ void write_bundles(string subject_name, string output_path, vector<vector<float>
     for (unsigned int i = 0; i<assignment.size();i++){
         if (assignment[i].size()!=0){
             string bundlesdata_path = output_path+"/"+subject_name+"_to_"+names[i]+".bundlesdata";
-            char * bundlesdata_file = str_to_char_array(bundlesdata_path);
+            char * bundlesdata_file = &bundlesdata_path[0];
             FILE *fp = fopen(bundlesdata_file, "wb"); 	// Opening and writing .bundlesdata file.
             if (fp == NULL) {fputs ("File error opening .bundlesdata file\n",stderr); exit (1);}
             for (unsigned int j = 0; j < assignment[i].size(); j ++) {
@@ -270,7 +270,7 @@ void write_bundles(string subject_name, string output_path, vector<vector<float>
                        <<"    \'space_dimension\' : 3"<<endl
                        <<"  }"<<endl;
             bundlesfile.close();
-            delete(bundlesdata_file);
+            // delete(bundlesdata_file);
         }
     }
     delete(output_folder);
@@ -282,7 +282,7 @@ vector<float> read_bundles(string path, unsigned short int ndata_fiber) {
     char path2[path.length()+1];
     strncpy(path2, path.c_str(), sizeof(path2));
     path2[sizeof(path2) - 1] = 0;
-    cout<<path2<<endl;
+    // cout<<path2<<endl;
     FILE *fp = fopen(path2, "rb");
 	 // Open subject file.
     if (fp == NULL) {fputs ("File error opening file\n",stderr); exit (1);}
@@ -312,8 +312,7 @@ vector<float> get_atlas_bundles(string path, vector<string> names,unsigned short
     vector<float> atlas_bundles;
     for (unsigned int i = 0; i<names.size();i++){
 		
-        string file_path = path + "/atlas_" +names[i] + ".bundlesdata";
-
+        string file_path = path + "/" +names[i] + ".bundlesdata";
         vector<float> bundle = read_bundles(file_path,ndata_fiber);
         atlas_bundles.insert( atlas_bundles.end(), bundle.begin(), bundle.end() );
     }
@@ -333,9 +332,8 @@ void read_atlas_info(string path, vector<string> &names, vector<float> &thres,
     unsigned int n;
     while (infile >> name >> t >> n)
     {
-        cout<<name<<" "<<t<<" "<<n<<endl;
         names.push_back(name);
-        thres.push_back(t+100);
+        thres.push_back(t);
         nfibers_atlas += n;
         fibers_per_bundle.push_back(n);
         //cout<< name << " "<< to_string(t)<<" "<< to_string(n) << endl;
@@ -539,15 +537,13 @@ int main (int argc, char *argv[])
 
     subject_data = read_bundles(subject_path+"data", ndata_fiber);
 
-    //std::cout << "holi" << std::endl;
 
     vector<unsigned short> assignment;
     time_start_paralell = omp_get_wtime();
     //for (int i = 0; i<5; i++)
     assignment = parallel_segmentation(atlas_data,subject_data,ndata_fiber,thresholds,bundle_of_fiber);
 
-    /*std::cout << "Holi" << std::endl;
-
+    /*
     for(unsigned int v = 0; v < assignment.size(); v++){
     	std::cout << static_cast<unsigned>(assignment[v]) << std::endl;
     }*/
@@ -584,7 +580,6 @@ int main (int argc, char *argv[])
     
     write_indices(indices_output_dir, bundles_names, map_results);
 
-    //std::cout << "holi" << std::endl;
 
     return 0;
 }

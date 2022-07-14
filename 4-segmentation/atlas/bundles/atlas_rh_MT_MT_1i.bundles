@@ -1,6 +1,6 @@
 attributes = {
     'binary' : 1,
-    'bundles' : ['points', 0],
+    'bundles' : [ 'MT_MT_1i', 0 ],
     'byte_order' : 'DCBA',
     'curves_count' : 215,
     'data_file_name' : '*.bundlesdata',

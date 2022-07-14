@@ -390,7 +390,6 @@ def read_transformed_mesh_obj( infile ):
     return vertex, polygons
 
 def write_bundle( outfile, points ):
-
   #write bundles file
   f = open( outfile + 'data','wb' )
   ncount = len( points )

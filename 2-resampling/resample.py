@@ -6,7 +6,7 @@ subjs_dir = sys.argv[1]
 subs = len(os.listdir(subjs_dir))
 sub = '001'
 sp.call(['gcc','BundleTools_sp.c', 'resampling.c', '-o', 'main', '-lm'])
-for i in range(1,subs+1):
+for i in range(46,subs+1):
     if i < 10:
         sub = '00' + str(i)
     else:

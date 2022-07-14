@@ -1,8 +1,8 @@
 attributes = {
     'binary' : 1,
-    'bundles' : ['points', 0],
+    'bundles' : [ 'lh_CMF-PrC_1', 0 ],
     'byte_order' : 'DCBA',
-    'curves_count' : 30,
+    'curves_count' : 134,
     'data_file_name' : '*.bundlesdata',
     'format' : 'bundles_1.0',
     'space_dimension' : 3

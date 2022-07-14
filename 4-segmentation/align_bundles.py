@@ -40,20 +40,20 @@ path = sys.argv[1] #bundles path
 bundles = get_files(path)
 
 #Creates aligned fibers folder
-aligned_path = "aligned_bundles/"
+aligned_path = sys.argv[2]
 if not os.path.exists(aligned_path):
     os.makedirs(aligned_path)
-    
+    os.makedirs(aligned_path+'/left')
+    os.makedirs(aligned_path+'/right')
 
 for bundle in bundles:
-    start = bundle.find("lh")
-    if start == -1:
-        start = bundle.find("rh")
-    # print(bundle[start:])
-    name = "_".join(bundle[start:].split("_")) #saves the name of the regions of the bundle e.g "AR_ANT.bundles"
+    hemi = '/right'
+    if 'LEFT' in bundle or 'lh' in bundle:
+        hemi = '/left'
+    start = bundle.find("atlas_") #assumes that bundle name is subject_to_atlas_<region(s)>.bundles
+    name = "_".join(bundle[start+6:].split("_")) #saves the name of the regions of the bundle e.g "AR_ANT.bundles"
     bundle = bt.read_bundle(path + bundle)
     centroid = calculate_centroid(bundle)
 
     aligned_bundles = align_bundle(bundle, centroid)
-
-    bt.write_bundle(aligned_path + '/aligned_' +  name, aligned_bundles)
+    bt.write_bundle(aligned_path + hemi + '/aligned_' +  name, aligned_bundles)

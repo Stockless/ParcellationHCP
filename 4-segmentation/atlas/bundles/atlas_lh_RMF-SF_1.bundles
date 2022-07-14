@@ -1,6 +1,6 @@
 attributes = {
     'binary' : 1,
-    'bundles' : ['points', 0],
+    'bundles' : [ 'lh_RMF-SF_1', 0 ],
     'byte_order' : 'DCBA',
     'curves_count' : 85,
     'data_file_name' : '*.bundlesdata',

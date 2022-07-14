@@ -20,7 +20,8 @@ def change_name(dir_name):
             file_name[-1] = "."+file_name[-1]
             file_name[0] += "_rh_"
             file_name = file_name[0] + "_".join(file_name[1::])
+        print("New file: "+file_name)
             #os.rename(dir_name + '/' + file, dir_name + '/' + new_name)
         os.rename(dir_name + '/' + file, dir_name + '/' + file_name)
 
-change_name("fused bundle-atlas")
+change_name("atlas/bundles")

@@ -24,9 +24,11 @@ def read_intersection( infile ):
     return InTri, FnTri, InPoints, FnPoints, fib_index;
     
 #========================== Cálculo de intersección ==========================================    
-subs = 1
-sub = int(sys.argv[5])
-for i in range(sub,sub+1):
+subs_path = sys.argv[1]
+meshes_path = sys.argv[2]
+subs = 5#len(os.listdir(subs_path))
+sp.call(['make']);
+for i in range(1,subs+1):
 
     t1 = time();
     
@@ -38,13 +40,11 @@ for i in range(sub,sub+1):
             
     print(sub);
     
-    Lhemi_path = sys.argv[1]; # left hemisphere path
-    Rhemi_path = sys.argv[2]; # left hemisphere path
+    Lhemi_path = meshes_path+sub+'/lh.obj'; # left mesh path
+    Rhemi_path = meshes_path+sub+'/rh.obj'; # right mesh path
     
-    #Lbundles_path = os.getcwd() + '/../../../../MT/Narciso_Andrea/subs/001/tractography-streamline-regularized-deterministic_resampled_filtered_trm_ffclust/aligned_individual_clusters/';
-    Lbundles_path = sys.argv[3]; # bundles path
-    Rbundles_path = sys.argv[4]; # bundles path
-    #Rbundles_path = os.getcwd() + '/ARCHI database/short fibers/001/right-hemi/'; # right bundles path
+    Lbundles_path = subs_path+sub+'/aligned_T1/left/'; # bundles path
+    Rbundles_path = subs_path+sub+'/aligned_T1/right/'; # bundles path
     
     Lintersection_path = os.getcwd() + '/intersection/' + sub + '/' + sub + '_left-hemi/'; # left intersection path
     Rintersection_path = os.getcwd() + '/intersection/' + sub + '/' + sub + '_right-hemi/'; # right intersection path
@@ -55,7 +55,6 @@ for i in range(sub,sub+1):
     if not os.path.exists(os.getcwd() + '/intersection/'+ sub):
         os.mkdir(os.getcwd() + '/intersection/'+sub)
     
-    sp.call(['make']);
     sp.call(['./interx', Lhemi_path, Rhemi_path, Lbundles_path, Rbundles_path, Lintersection_path, Rintersection_path]);
     
     print('Tiempo de ejecución Ldirect: ' + str(time()-t1) + '[s]');

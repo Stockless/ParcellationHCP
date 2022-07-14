@@ -288,7 +288,7 @@ void read_atlas_info(string path, vector<string> &names, vector<unsigned char> &
     while (infile >> name >> t >> n)
     {
         names.push_back(name);
-        thres.push_back(t+10);
+        thres.push_back(t);
         nfibers_atlas += n;
         fibers_per_bundle.push_back(n);
     }
@@ -437,7 +437,7 @@ int main (int argc, char *argv[])
     string atlas_path = argv[4];
     string atlas_inf = argv[5];
     string output_dir = argv[6];
-
+    // cout<<argv[2]<<endl<<argv[3]<<endl<<argv[4]<<endl<<argv[5]<<endl;
     //Number of coord of each fiber
     unsigned short int ndata_fiber = n_points*3;
 
@@ -455,6 +455,7 @@ int main (int argc, char *argv[])
     vector<float> subject_data;
 
     //Read the atlas information file and get the number of bundles of the atlas
+    cout<<"ajsd"<<endl;
     read_atlas_info(atlas_inf, bundles_names, thresholds, nfibers_atlas,fibers_per_bundle);
     //nbundles_atlas = bundles_names.size();
     bundle_of_fiber = atlas_bundle(fibers_per_bundle, nfibers_atlas);
@@ -467,7 +468,6 @@ int main (int argc, char *argv[])
     //Read the subject data of .bundlesdata file
 
     subject_data = read_bundles(subject_path+"data", ndata_fiber);
-
 
     vector<unsigned char> assignment;
     time_start_paralell = omp_get_wtime();
