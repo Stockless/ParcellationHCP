@@ -730,7 +730,7 @@ meshes_path= '../../Data/meshes_obj/'
 #0.1idc - 0,2dc
 idc_thr = 0.3
 dc_thr = 0.4
-dice_thr=0.5
+dice_thr=0.6
 ero = 1
 dil = 6
 output_parcellation= 'Parcellation/QB_'+str(theta_QB)+'/IDC_DC_'+str(idc_thr*100)+'%_'+str(dc_thr*100)+'%/' #revisar
@@ -770,6 +770,6 @@ visualize_parcellation(meshes_path, lh_mine_common, rh_mine_common, '001', seed 
 # Lparcels_final, Rparcels_final= load_parcels('final', output_parcellation)
 # Lparcels_hard, Rparcels_hard= load_parcels('hard', output_parcellation)
 # Lparcels_cc, Rparcels_cc= load_parcels('cc', output_parcellation)
-# visualize_parcellation(meshes_path, Lparcels_final, Rparcels_final, sub, seed = semilla_visualizacion)
 # visualize_parcellation(meshes_path, Lparcels_hard, Rparcels_hard, '001', seed = semilla_visualizacion)
 # visualize_parcellation(meshes_path, Lparcels_cc, Rparcels_cc, '001', seed = semilla_visualizacion)
+# visualize_parcellation(meshes_path, Lparcels_final, Rparcels_final, sub, seed = semilla_visualizacion)
