@@ -4,7 +4,7 @@ import os
 
 subjs_dir = sys.argv[1]
 input_matrix = sys.argv[2] # e.g: T2_to_Tal_trm.trm
-subs = 5#len(os.listdir(subjs_dir))
+subs = len(os.listdir(subjs_dir))
 sub = '001'
 sp.call(['g++', '-std=c++14', '-O3', 'transform.cpp', '-o', 'transform', '-fopenmp', '-ffast-math'])
 for i in range(1,subs+1):

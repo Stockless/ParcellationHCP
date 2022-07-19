@@ -3,7 +3,7 @@ import sys
 import os
 
 subjs_dir = sys.argv[1] #Data/subs
-subs = 5#len(os.listdir(subjs_dir))
+subs = len(os.listdir(subjs_dir))
 atlas_bundles = sys.argv[2] #atlas/bundles
 atlas_info = sys.argv[3] #atlas/info.txt
 sub = '001'

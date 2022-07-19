@@ -41,7 +41,7 @@ def create_atlas_dirs(path,trac):
     os.mkdir(atlas_path)
     if trac.lower() == "y":
         trac_path = path+"/trac_atlas"
-    os.mkdir(trac_path)
+        os.mkdir(trac_path)
     connect_path = path+"/connectogram"
     os.mkdir(connect_path)
     return atlas_path,trac_path,connect_path

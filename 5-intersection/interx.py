@@ -26,7 +26,7 @@ def read_intersection( infile ):
 #========================== Cálculo de intersección ==========================================    
 subs_path = sys.argv[1]
 meshes_path = sys.argv[2]
-subs = 5#len(os.listdir(subs_path))
+subs = len(os.listdir(subs_path))
 sp.call(['make']);
 for i in range(1,subs+1):
 

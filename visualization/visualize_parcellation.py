@@ -21,8 +21,8 @@ def load_restricted_triangles():
     return Lrestricted, Rrestricted
 
 def load_parcels (parcels, parcels_path): #hard cc final
-    Lparcels_path =  parcels +'Lparcels.txt'
-    Rparcels_path = parcels +'Rparcels.txt'
+    Lparcels_path =  parcels +'Lhard_parcels.txt'
+    Rparcels_path = parcels +'Rhard_parcels.txt'
 
     Lparcels = read_parcel(Lparcels_path,'L')
     Rparcels = read_parcel(Rparcels_path,'R')
@@ -51,11 +51,20 @@ def read_parcel(parcel_path, hemi):
     with open(parcel_path,"r") as fp:
         for line in fp.readlines():
             line = line.split()
-            if line[0] == "sp":
+            if len(line) == 0:
+                continue
+            if line[0] == "hp":
                 label = line[1]
             if line[0] == "t":
                 parcel[label+"_"+hemi] = list(map(int,line[1:]))
                 label = ""
+    max = 0
+    max_label = ""
+    for k, v in parcel.items():
+        if len(v) > max:
+            max = len(v)
+            max_label = k
+    
     return parcel
 
 def visualize_parcellation(meshes_path, L_sp, R_sp, sub, seed = False):
@@ -77,8 +86,10 @@ def visualize_parcellation(meshes_path, L_sp, R_sp, sub, seed = False):
     fp = list(final_parcels)    
     print(len(fp))
     #Paleta de colores según cantidad de parcelas
-    paleta = [(np.random.random(), np.random.random(), np.random.random()) for i in range(len(fp))]
-
+    paleta = [(255,255,255) for i in range(len(fp))]
+    max_lparcel = fp.find('37_L')
+    max_rparcel = fp.find('36_R')
+    paleta[max_lparcel] = (0,0,0)
     #Directorios de los mallados corticales
     Lhemi_path = meshes_path + sub + '/lh.obj'; # left hemisphere path
     Rhemi_path = meshes_path + sub + '/rh.obj'; # right hemisphere path
@@ -99,22 +110,6 @@ def visualize_parcellation(meshes_path, L_sp, R_sp, sub, seed = False):
     #Se renderizan los mallados
     render.AddActor(Lhemi);
     render.AddActor(Rhemi);
-    
-    #Para cada parcela del hemisferio izquierdo...
-    # for k, v in L_sp.items():
-    #     #Se selecciona un color de la paleta
-    #     color = paleta[fp.index(k)]
-        
-    #     if len(v) == 0:
-    #         continue
-      
-    #     #De todos los triángulos con parcelas, se eliminan aquellos que pertenecen al conjunto de triángulos restringidos.
-    #     v_restricted = list(set(v)) #list(set(v).difference(Lrestricted))
-
-    #     #Se renderizan los triángulos y polígonos.
-    #     sp_tri = vt.Polygon(Lvertex, Lpolygons[v_restricted]);
-    #     sp_tri.setColor((color[0], color[1], color[2]));
-    #     render.AddActor(sp_tri);
 
     add_parcels_to_render(render, Lvertex, Lpolygons, L_sp, paleta, fp, Lrestricted)
     add_parcels_to_render(render, Rvertex, Rpolygons, R_sp, paleta, fp, Rrestricted)
@@ -140,8 +135,8 @@ def add_parcels_to_render(render, Hvertex, Hpolygons, H_sp, paleta, fp, restrict
     return render
 
 output = "output"
-# Lparcels_final, Rparcels_final = load_parcels('final_atlas/',     output)
-Lparcels_final, Rparcels_final = load_parcels_2('final_parcels/')
+Lparcels_final, Rparcels_final = load_parcels('final_atlas/',     output)
+# Lparcels_final, Rparcels_final = load_parcels_2('final_parcels/')
 print(len(Lparcels_final.keys()),len(Rparcels_final.keys()))
 meshes_path = "meshes/"
 visualize_parcellation(meshes_path,Lparcels_final,Rparcels_final,"001")

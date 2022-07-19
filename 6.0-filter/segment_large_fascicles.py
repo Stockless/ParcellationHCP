@@ -98,7 +98,7 @@ def read_names(names):
         f.close()
     return parcel_names
 
-def get_triangle_fibers(intersection,triangles,names,bundle,output_path,thr=100):
+def get_triangle_fibers(intersection,triangles,names,bundle,output_path,hemi,thr=100):
     """
     Diccionario de conexión de parcelas para cada par de triangulos inicial y final
     contiene el nombre de las parcelas que conectan y el índice de la fibra correspondiente
@@ -116,7 +116,7 @@ def get_triangle_fibers(intersection,triangles,names,bundle,output_path,thr=100)
     for name,inter in conn_dict.items():
         if len(inter) < thr: #minimum number of fibers on bundle
             continue        #will only write bundles with significant fibers
-        file = open(output_path+"/aligned_"+name+".txt",'w')
+        file = open(output_path+"/aligned_"+hemi+"_"+name+".txt",'w')
         file.write(str(len(inter))+"\n")
         # print(len(inter))
         for idx in inter:
@@ -140,13 +140,14 @@ def get_triangle_fibers(intersection,triangles,names,bundle,output_path,thr=100)
 
 
 #python segment_large_fascicles.py rh.obj large_fascicles/intersections/ rh_labels.txt dk_names.txt        
-meshes_path = sys.argv[1] #rh.obj
-intersection_folder = sys.argv[2] #intersection files folder
-labels_folder = sys.argv[3] #rh_labels.txt
-parcel_names = read_names(sys.argv[4]) #dk_names.txt
+meshes_path = sys.argv[1] #Data/meshes_obj/
+intersection_folder = sys.argv[2] #Data/intersections/
+labels_folder = sys.argv[3] #labels/
+parcel_names = read_names(sys.argv[4]) #atlas_parcel_names.txt
 
-# For right hemisphere
 for sub in os.listdir(intersection_folder):    
+    print(sub)
+    # For right hemisphere
     HemiVtxlabels = read_labels(labels_folder+"rh_labels.txt")
     HemiTriangles, Lvertex = read_mesh_vtk(meshes_path+sub+'/rh.obj',HemiVtxlabels)
 
@@ -155,10 +156,9 @@ for sub in os.listdir(intersection_folder):
     for file in os.listdir(intersection_path):
         name = file.split(".")[:-1][0]
         if len(name.split("_")) == 3:
-            print(name)
             numTri, InTri, FnTri, inter_in, inter_fn, fib_idx = read_intersection(intersection_path+file)
             inter = Intersection(numTri, InTri, FnTri, inter_in, inter_fn, fib_idx)
-            get_triangle_fibers(inter,HemiTriangles,parcel_names,name,intersection_path)
+            get_triangle_fibers(inter,HemiTriangles,parcel_names,name,intersection_path,'rh')
             os.remove(intersection_path+file)
     
     # For left hemisphere
@@ -170,10 +170,9 @@ for sub in os.listdir(intersection_folder):
     for file in os.listdir(intersection_path):
         name = file.split(".")[:-1][0]
         if len(name.split("_")) == 3:
-            print(name)
             numTri, InTri, FnTri, inter_in, inter_fn, fib_idx = read_intersection(intersection_path+file)
             inter = Intersection(numTri, InTri, FnTri, inter_in, inter_fn, fib_idx)
-            get_triangle_fibers(inter,HemiTriangles,parcel_names,name,intersection_path)
+            get_triangle_fibers(inter,HemiTriangles,parcel_names,name,intersection_path,'lh')
             os.remove(intersection_path+file)
 
 

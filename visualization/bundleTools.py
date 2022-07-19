@@ -277,6 +277,19 @@ def read_intersection( infile ):
     f.close();
     return InTri, FnTri, InPoints, FnPoints, fib_index;
 
+def read_intersection_txt(file):
+  with open(file,'r') as f:
+      numTri = f.readline()
+      InTri = list(map(int,f.readline().split()))
+      FnTri = list(map(int,f.readline().split()))
+      in_pnts = list(map(float,f.readline().split()))
+      InPoints = [[in_pnts[i],in_pnts[i+1],in_pnts[i+2]] for i in range(0,len(in_pnts),3)]
+      fn_pnts = list(map(float,f.readline().split()))
+      FnPoints = [[fn_pnts[i],fn_pnts[i+1],fn_pnts[i+2]] for i in range(0,len(fn_pnts),3)]
+      id_fib = f.readline().split()
+      f.close()
+  return InTri, FnTri, InPoints, FnPoints, id_fib
+
 def read_mesh( infile ):
     
     f = open(infile, 'rb');
@@ -348,6 +361,16 @@ def read_OneFiber( infile ):
   return points#, bundles
 
 def read_parcels( infile ):
+    
+    f = open(infile, 'rb');
+
+    total_Tri = N.frombuffer( f.read( 4 ), N.uint32 )[ 0 ];
+    Tri = N.frombuffer( f.read( 4 * total_Tri), N.uint32 );
+    
+    f.close();
+    return Tri;
+
+def read_parcels_txt( infile ):
     f = open(infile, 'r');
 
     total_Tri = f.readline()
@@ -454,12 +477,12 @@ def write_parcels( outfile, Tri ):
     N.array(len(Tri), dtype = N.uint32).tofile(f)
     N.array(Tri, dtype = N.uint32).tofile(f)
 
-    f.write(len(Tri))
-    f.write(Tri)
+    # f.write(len(Tri))
+    # f.write(Tri)
     
     
-    total_Tri = N.frombuffer( f.write( 4 ), N.uint32 )[ 0 ];
-    Tri = N.frombuffer( f.read( 4 * total_Tri), N.uint32 );
+    # total_Tri = N.frombuffer( f.write( 4 ), N.uint32 )[ 0 ];
+    # Tri = N.frombuffer( f.read( 4 * total_Tri), N.uint32 );
     
     f.close();
     

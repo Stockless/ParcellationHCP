@@ -3,7 +3,7 @@ import sys
 import os
 
 subjs_dir = sys.argv[1]
-subs = 5#len(os.listdir(subjs_dir))
+subs = len(os.listdir(subjs_dir))
 sub = '001'
 sp.call(['g++', '-std=c++14', '-O3', 'transform.cpp', '-o', 'transform', '-fopenmp', '-ffast-math'])
 for i in range(1,subs+1):

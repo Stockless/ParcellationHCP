@@ -73,7 +73,6 @@ def fusion(aparcels,anatomic_parcel,sub_parcel_list,parcel_names):
 
 def joinable_sparcels(clique, visited):
     subparcels = []
-    nodes = set()
     for node in clique:
         if node.label < len(visited):
             if not visited[node.label]:
@@ -130,7 +129,6 @@ def create_fusion_list(anatomic_parcel,thr_prob,thr_pct,names):
             if sparcel1!=sparcel2:
                 triangles1 = sparcel1.get_triangles_prob(thr_prob, sparcel1.label)
                 triangles2 = sparcel2.get_triangles_prob(thr_prob, sparcel2.label)
-                # sys.exit()
                 inter = intersection(triangles1, triangles2)
                 if (len(sparcel1.triangles)) > len(sparcel2.triangles):
                     pct = len(inter) / len(sparcel2.triangles) 
@@ -172,8 +170,10 @@ def remove_small_parcels(aparcels,anatomic_parcel,parcel_names,size_thr):
     for sparcel in anatomic_parcel.sub_parcels:
         avg_inter +=sum([len(tri.labels_subparcel) for tri in sparcel.triangles])
     avg_inter = avg_inter / (len(anatomic_parcel.sub_parcels))
-    thr = (avg_size*size_thr) / 1000
-    thr_inter = (avg_inter*size_thr) / 1000
+    # thr = (avg_size*size_thr) / 1000
+    # thr_inter = (avg_inter*size_thr) / 1000
+    thr = avg_size
+    thr_inter = avg_inter
     n = 0
     for sparcel in anatomic_parcel.sub_parcels:
         num_inters = sum([len(tri.labels_subparcel) for tri in sparcel.triangles])
@@ -189,7 +189,7 @@ import sys
 def processing_parcels(aparcels,pct,thr_prob,size_thr,parcel_names,trac,trac_path,hemi):
     n_remove = 0
     for i,anatomic_parcel in enumerate(aparcels):
-        # print(len(anatomic_parcel.sub_parcels))
+        print("Processing parcel: ",anatomic_parcel.label)
         if len(anatomic_parcel.sub_parcels) > 0:
             if trac == "y":
                 fusion_file = open(trac_path+"/"+hemi+"fusion.txt","a+")
@@ -197,12 +197,12 @@ def processing_parcels(aparcels,pct,thr_prob,size_thr,parcel_names,trac,trac_pat
             n_remove += remove_small_parcels(aparcels,anatomic_parcel,parcel_names,size_thr)
             # print("fusion list for: ",anatomic_parcel.label)
             fusion_list = create_fusion_list(anatomic_parcel,thr_prob,pct,parcel_names)
-            print("created fusion list for: ",anatomic_parcel.label)
+            # print("created fusion list for: ",anatomic_parcel.label)
             for list in fusion_list:
-                print(list)
+                # print(list)
                 if (len(list)>1):
                     if trac == "y":
-                        print("writing fusion list for: "," ".join([str(parcel.label) for parcel in list]))
+                        # print("writing fusion list for: "," ".join([str(parcel.label) for parcel in list]))
                         fusion_file.write("sp "+str(list[0].label)+"\nf ")
                         fusion_file.write(" ".join([str(parcel.label) for parcel in list])+"\n")
                     fusion(aparcels,anatomic_parcel,list,parcel_names)
@@ -256,8 +256,8 @@ def main():
     parser.add_argument('--output-dir', type=str, help='Output directory')
     parser.add_argument('--traceability',type= str, default='y', help='Write y, to obtain the traceability of the parcels')
     parser.add_argument('--size-thr', type=float, default='10',help='Size to delete small parcels')
-    parser.add_argument('--density-center', type=float, default='0.15',help='Less probable triangles in a parcel (probability)')
-    parser.add_argument('--pct', type=float, default='10',help='Percent of common triangles in the intersection of two density centers')
+    parser.add_argument('--density-center', type=float,  default='0.15',help='Less probable triangles in a parcel (probability)')
+    parser.add_argument('--pct', type=float, default='0.1',help='Percent of common triangles in the intersection of two density centers')
     parser.add_argument('--ero', type=int, default='1',help='Erosion threshold')
     parser.add_argument('--dil', type=int, default='6',help='Dilation threshold')
     args = parser.parse_args()
@@ -300,14 +300,13 @@ def main():
 
     IO.write_atlas(Lanatomic_parcels,Lparcel_names,Ltriangles,atlas_path,False,"L")
     IO.write_atlas(Ranatomic_parcels,Rparcel_names,Rtriangles,atlas_path,False,"R")
-
     Lparcelcc_path = atlas_path
     Rparcelcc_path = atlas_path
     Lhemi_path = args.LVtk_file
     Rhemi_path = args.RVtk_file
 
-    Lfinal_path = atlas_path + '/final_parcels/left/'
-    Rfinal_path = atlas_path + '/final_parcels/right/'
+    Lfinal_path = args.output_dir + '/final_parcels/left/'
+    Rfinal_path = args.output_dir + '/final_parcels/right/'
     
     if not os.path.exists(Lfinal_path):
         os.makedirs(Lfinal_path)
