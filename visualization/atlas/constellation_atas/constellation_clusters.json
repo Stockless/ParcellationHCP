@@ -1,9 +1,0 @@
-{
-    "run": "1", 
-    "data_type": "group connectivity clusters", 
-    "module": "constellation", 
-    "soft_version": "4.6.0", 
-    "session": "1", 
-    "atlas": "constellation", 
-    "software": "brainvisa"
-}

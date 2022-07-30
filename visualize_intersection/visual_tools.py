@@ -272,6 +272,7 @@ def visual_allpoints(all_points,mesh=False,in_tri=False,fn_tri=False):
     for fiber in all_points:
         body = Line(fiber);
         body.setJetScalar();
+        body.setOpacity(0.3)
         myActors.append(body);    
     
     if mesh:

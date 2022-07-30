@@ -33,12 +33,10 @@ def inv_trm(trmfile,trmfileout):
     out: trmfileout
     """
     m=readtrm(trmfile)
-
     m3=np.zeros((4,4))
     m3[-1,-1]=1
     m3[0:3,0:3]=np.linalg.inv(m[1::,:])
     m3[0:3,3]=  - np.dot(np.linalg.inv(m[1::,:]),  m[0].T)
-    
     m4=np.zeros((4,3))
     m4[1::,:]=m3[0:3,0:3]
     m4[0]=m3[0:3,3]
@@ -46,6 +44,9 @@ def inv_trm(trmfile,trmfileout):
     writetrm(m4,trmfileout)
 
 
+if len(sys.argv) < 4:
+    print("Usage: python inversaafintrm.py ../subs_dir/ trmfilein.trm trmfileout.trm")
+    sys.exit(0)
 subs_path = sys.argv[1]
 trm_matrix = sys.argv[2]
 out_trm_name = sys.argv[3]

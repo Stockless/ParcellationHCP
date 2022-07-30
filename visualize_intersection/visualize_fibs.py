@@ -48,6 +48,6 @@ fn_tri = vt.Polygon(Lvertex, Lpolygons[FnTri])
 fn_tri.setColor((0.0,0.0,1.0))
 # bundles = load_bundles('bundles/')
 
-# bundle_path = sys.argv[3]
-bun = BT.read_bundle("bundles/aligned_lh_ST_LO.bundles") #loads one bundle
+bundle_path = sys.argv[3]
+bun = BT.read_bundle(bundle_path) #loads one bundle
 vt.visual_allpoints(bun,Lhemi,in_tri,fn_tri)

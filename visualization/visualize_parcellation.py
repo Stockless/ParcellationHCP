@@ -1,3 +1,4 @@
+from random import random
 import visualizationTools as vt
 import numpy as np
 import bundleTools as bt
@@ -21,8 +22,8 @@ def load_restricted_triangles():
     return Lrestricted, Rrestricted
 
 def load_parcels (parcels, parcels_path): #hard cc final
-    Lparcels_path =  parcels +'Lhard_parcels.txt'
-    Rparcels_path = parcels +'Rhard_parcels.txt'
+    Lparcels_path =  parcels +'Lparcels.txt'
+    Rparcels_path = parcels +'Rparcels.txt'
 
     Lparcels = read_parcel(Lparcels_path,'L')
     Rparcels = read_parcel(Rparcels_path,'R')
@@ -47,25 +48,29 @@ def load_parcels_2(parcels_path):
 
 
 def read_parcel(parcel_path, hemi):
-    parcel = dict()
+    parcels = dict()
     with open(parcel_path,"r") as fp:
         for line in fp.readlines():
             line = line.split()
             if len(line) == 0:
                 continue
-            if line[0] == "hp":
+            if line[0] == "sp":
                 label = line[1]
             if line[0] == "t":
-                parcel[label+"_"+hemi] = list(map(int,line[1:]))
+                if not label+"_"+hemi in parcels:
+                    parcels[label+"_"+hemi] = set()
+                for item in line[1:]:
+                    parcels[label+"_"+hemi].add(int(item))
+                # parcel[label+"_"+hemi] = list(map(int,line[1:]))
                 label = ""
     max = 0
     max_label = ""
-    for k, v in parcel.items():
+    for k, v in parcels.items():
         if len(v) > max:
             max = len(v)
             max_label = k
     
-    return parcel
+    return parcels
 
 def visualize_parcellation(meshes_path, L_sp, R_sp, sub, seed = False):
     #Cargar trianguos restringidos
@@ -86,10 +91,10 @@ def visualize_parcellation(meshes_path, L_sp, R_sp, sub, seed = False):
     fp = list(final_parcels)    
     print(len(fp))
     #Paleta de colores según cantidad de parcelas
-    paleta = [(255,255,255) for i in range(len(fp))]
-    max_lparcel = fp.find('37_L')
-    max_rparcel = fp.find('36_R')
-    paleta[max_lparcel] = (0,0,0)
+    paleta = [(random(),random(),random()) for i in range(len(fp))]
+    # max_lparcel = fp.find('37_L')
+    # max_rparcel = fp.find('36_R')
+    # paleta[max_lparcel] = (0,0,0)
     #Directorios de los mallados corticales
     Lhemi_path = meshes_path + sub + '/lh.obj'; # left hemisphere path
     Rhemi_path = meshes_path + sub + '/rh.obj'; # right hemisphere path
@@ -135,7 +140,7 @@ def add_parcels_to_render(render, Hvertex, Hpolygons, H_sp, paleta, fp, restrict
     return render
 
 output = "output"
-Lparcels_final, Rparcels_final = load_parcels('final_atlas/',     output)
+Lparcels_final, Rparcels_final = load_parcels('trac_atlas/',     output)
 # Lparcels_final, Rparcels_final = load_parcels_2('final_parcels/')
 print(len(Lparcels_final.keys()),len(Rparcels_final.keys()))
 meshes_path = "meshes/"

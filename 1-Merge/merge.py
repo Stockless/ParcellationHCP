@@ -1,22 +1,21 @@
-import numpy as np
 import os
 import sys
-import math
-import statistics
-#import matplotlib.pyplot as plt
-#import visualizationTools as vt
-#import visual_tools as vs
+import shutil
 from dipy.segment.metric import EuclideanMetric
 from dipy.segment.metric import mdf
 from dipy.segment.metric import dist
-from subprocess import call
 
 #Import bundleTools from parent directory
 sys.path.append('../bundleTools')
 import bundleTools as BT
 import bundleTools3 as BT3
 
+if len(sys.argv) < 2:
+    print("Usage: python merge.py ../subjects_dir/")
+    sys.exit(0)
+
 subjects_path = sys.argv[1]
+clean = input("Clean OverSampledFibers folder after merging? (y/n): ").capitalize()
 subjects_list = os.listdir(subjects_path);
 
 for subject in subjects_list:
@@ -40,3 +39,5 @@ for subject in subjects_list:
             all_points.append(fiber)
 
         BT3.write_bundle(subjects_path+subject+'/tractography-streamline-regularized-deterministic_'+subject+'.bundles', all_points)
+        if clean[0] == 'Y':
+            shutil.rmtree(subjects_path+subject+'/OverSampledFibers/')

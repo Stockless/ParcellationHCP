@@ -58,7 +58,7 @@ def triangles_per_fascicle(hemi_dict, sp_dict):
                 sp_dict[k][tri] = v
 
 
-Lhemi_path = 'lh.obj' ;
+Lhemi_path = 'rh.obj' ;
 Lvertex, Lpolygons = BT.read_mesh_obj(Lhemi_path)
 Lhemi = vt.Polygon(Lvertex, Lpolygons);
 Lhemi.setOpacity(1.0)
@@ -87,48 +87,21 @@ for bundle in Left_bundles_intersec:
     tri.setColor((0.0,0.0,1.0))
     render.AddActor(tri)
 
-    if bundle[:len(bundle)-17] + '_A' not in Atlas_L_fasc_dict:
-        Atlas_L_fasc_dict[bundle[:len(bundle)-17] + '_A'] = {}
-
-    if bundle[:len(bundle)-17]+ '_B' not in Atlas_L_fasc_dict:
-        Atlas_L_fasc_dict[bundle[:len(bundle)-17] + '_B'] = {}
-
-    for i,tri in enumerate(InTri):
-        print(i)
-        Atlas_Lhemi_dict[tri]['n'] += 1
-        Atlas_Lhemi_dict[tri][bundle[:len(bundle)-17] + '_A'] += 1
-
-        nbors = Lneighbors[tri]
-        for nbor in nbors:
-            if nbor in InTri:
-                Atlas_Lhemi_dict[tri]['n'] += 1
-                Atlas_Lhemi_dict[tri][bundle[:len(bundle)-17] + '_A'] += 1
-
-    for i,tri in enumerate(FnTri):
-        print(i)
-        Atlas_Lhemi_dict[tri]['n'] += 1
-        Atlas_Lhemi_dict[tri][bundle[:len(bundle)-17] + '_B'] += 1
-
-        nbors = Lneighbors[tri]
-        for nbor in nbors:
-            if nbor in InTri:
-                Atlas_Lhemi_dict[tri]['n'] += 1
-                Atlas_Lhemi_dict[tri][bundle[:len(bundle)-17] + '_B'] += 1
 
 
-triangles_per_fascicle(Atlas_Lhemi_dict, Atlas_L_fasc_dict)
+# triangles_per_fascicle(Atlas_Lhemi_dict, Atlas_L_fasc_dict)
 
-dir = os.listdir('bundles/');
-bundles = []
-for bundle in dir:
-    if bundle[-1] == 'a':
-        continue
-    bundles.append(BT.read_bundle('bundles/'+bundle))
-for bundle in bundles:
-    for fiber in bundle:
-        fib = vt.Line(fiber)
-        fib.setJetColormap()
-        render.AddActor(fib)
+# dir = os.listdir('bundles/');
+# bundles = []
+# for bundle in dir:
+#     if bundle[-1] == 'a':
+#         continue
+#     bundles.append(BT.read_bundle('bundles/'+bundle))
+# for bundle in bundles:
+#     for fiber in bundle:
+#         fib = vt.Line(fiber)
+#         fib.setJetColormap()
+#         render.AddActor(fib)
 render.Start();
 
 del render

@@ -32,7 +32,6 @@ Last modification: 24-10-2018 */
 #include <sys/stat.h>
 #include <unordered_map>
 #include "dirent.h"
-#include <string>
 
 using namespace std;
 
@@ -55,18 +54,19 @@ float euclidean_distance_norm(float x1, float y1, float z1, float x2, float y2, 
 
 /*Return true when the fiber is discarded measuring the distance in central points*/
 bool discard_center(vector<float> &subject_data, vector<float> &atlas_data,unsigned short int ndata_fiber,
- unsigned char threshold, unsigned int fiber_index, unsigned int fatlas_index){
+ float threshold, unsigned int fiber_index, unsigned int fatlas_index){
     unsigned int fpoint = (fiber_index*ndata_fiber)+31; //Point of fiber, 31 is the middle of the fiber
     unsigned int apoint = (fatlas_index*ndata_fiber)+31; //Atlas point, 31 is the middle of the fiber
 
     float ed = euclidean_distance(subject_data[fpoint-1],subject_data[fpoint],subject_data[fpoint+1],
                                   atlas_data[apoint-1],atlas_data[apoint],atlas_data[apoint+1]);
+    //cout << "Discard center "<<"Threshold: "<< to_string(threshold)<< " "<< "Threshold^2: " <<to_string(threshold*threshold) << " "<< "Ed: "<< to_string(ed) << endl;
     if (ed>(threshold*threshold)) return true;
     else return false;
 }
 
 bool discard_extremes(vector<float> &subject_data, vector<float> &atlas_data,unsigned short int ndata_fiber,
-             unsigned char threshold, bool &is_inverted, unsigned int fiber_index, unsigned int fatlas_index){
+             float threshold, bool &is_inverted, unsigned int fiber_index, unsigned int fatlas_index){
     unsigned int fpoint1 = fiber_index*ndata_fiber;	//Point 0 of fiber
     unsigned int apoint1 = fatlas_index*ndata_fiber;	//Atlas point 0
     unsigned int fpoint21 = fpoint1+62;		//Last point on the fiber
@@ -95,7 +95,7 @@ bool discard_extremes(vector<float> &subject_data, vector<float> &atlas_data,uns
     }
 }
 
-bool discard_four_points(vector<float> &subject_data, vector<float> &atlas_data, unsigned short int ndata_fiber, unsigned char threshold, 
+bool discard_four_points(vector<float> &subject_data, vector<float> &atlas_data, unsigned short int ndata_fiber, float threshold, 
 bool is_inverted, unsigned int fiber_index, unsigned int fatlas_index){
     vector<unsigned short int> points = {3,7,13,17};
     unsigned short int inv = points.size()-1;
@@ -128,7 +128,7 @@ char * str_to_char_array(string s){
 }
 
 float discarded_21points (vector<float> &subject_data, vector<float> &atlas_data, unsigned short int ndata_fiber, 
-                unsigned char threshold, bool is_inverted, unsigned int fiber_index, unsigned int fatlas_index){
+                float threshold, bool is_inverted, unsigned int fiber_index, unsigned int fatlas_index){
     unsigned short int inv = 20;
     float ed;
     float max_ed = 0;
@@ -247,23 +247,22 @@ void write_bundles(string subject_name, string output_path, vector<vector<float>
     for (unsigned int i = 0; i<assignment.size();i++){
         if (assignment[i].size()!=0){
             string bundlesdata_path = output_path+"/"+subject_name+"_to_"+names[i]+".bundlesdata";
-            char * bundlesdata_file = str_to_char_array(bundlesdata_path);
+            char * bundlesdata_file = &bundlesdata_path[0];
             FILE *fp = fopen(bundlesdata_file, "wb"); 	// Opening and writing .bundlesdata file.
             if (fp == NULL) {fputs ("File error opening .bundlesdata file\n",stderr); exit (1);}
             for (unsigned int j = 0; j < assignment[i].size(); j ++) {
                 int fiber_index = assignment[i][j];
                 fwrite(&npoints, sizeof(uint32_t),1, fp);
-                cout<<fiber_index<<" "<<ndata_fiber<<endl;
-                cout << &subject_data[fiber_index*ndata_fiber] << endl;
+
+                //cout << &subject_data[fiber_index*ndata_fiber] << endl;
 
                 fwrite(&subject_data[fiber_index*ndata_fiber], sizeof(float), ndata_fiber, fp);
             }
             fclose(fp);
-            int len_to_hierarchy = names[i].length();
             bundlesfile.open( output_path+"/"+subject_name+"_to_"+names[i]+".bundles", ios::out);
             bundlesfile<< "attributes = {"<<endl
                        <<"    \'binary\' : 1,"<<endl
-                       <<"    \'bundles\' : [ '"<<names[i].substr(6,len_to_hierarchy-10)<<"', 0 ]," << endl
+                       <<"    \'bundles\' : [ '"<<(names[i])<<"', 0 ]," << endl
                        <<"    \'byte_order\' : \'DCBA\',"<<endl
                        <<"    \'curves_count\' : "<<assignment[i].size()<<","<< endl
                        <<"    \'data_file_name\' : \'*.bundlesdata\',"<<endl
@@ -271,7 +270,7 @@ void write_bundles(string subject_name, string output_path, vector<vector<float>
                        <<"    \'space_dimension\' : 3"<<endl
                        <<"  }"<<endl;
             bundlesfile.close();
-            delete(bundlesdata_file);
+            // delete(bundlesdata_file);
         }
     }
     delete(output_folder);
@@ -283,6 +282,7 @@ vector<float> read_bundles(string path, unsigned short int ndata_fiber) {
     char path2[path.length()+1];
     strncpy(path2, path.c_str(), sizeof(path2));
     path2[sizeof(path2) - 1] = 0;
+    // cout<<path2<<endl;
     FILE *fp = fopen(path2, "rb");
 	 // Open subject file.
     if (fp == NULL) {fputs ("File error opening file\n",stderr); exit (1);}
@@ -312,8 +312,7 @@ vector<float> get_atlas_bundles(string path, vector<string> names,unsigned short
     vector<float> atlas_bundles;
     for (unsigned int i = 0; i<names.size();i++){
 		
-        string file_path = path + "/atlas_" +names[i] + ".bundlesdata";
-
+        string file_path = path + "/" +names[i] + ".bundlesdata";
         vector<float> bundle = read_bundles(file_path,ndata_fiber);
         atlas_bundles.insert( atlas_bundles.end(), bundle.begin(), bundle.end() );
     }
@@ -321,7 +320,7 @@ vector<float> get_atlas_bundles(string path, vector<string> names,unsigned short
 }
 
 /*Read atlas information file*/
-void read_atlas_info(string path, vector<string> &names, vector<unsigned char> &thres,
+void read_atlas_info(string path, vector<string> &names, vector<float> &thres,
                      unsigned int &nfibers_atlas, vector<unsigned int> &fibers_per_bundle){
 
     ifstream infile(path, ios::in );
@@ -329,14 +328,15 @@ void read_atlas_info(string path, vector<string> &names, vector<unsigned char> &
         cerr << "Cant open " << endl;
 
     string name;
-    unsigned short int t;
+    float t;
     unsigned int n;
     while (infile >> name >> t >> n)
     {
         names.push_back(name);
-        thres.push_back(t-3);
+        thres.push_back(t);
         nfibers_atlas += n;
         fibers_per_bundle.push_back(n);
+        //cout<< name << " "<< to_string(t)<<" "<< to_string(n) << endl;
     }
 
     /*for(uint32_t jaja = 0; jaja < names.size(); jaja++){
@@ -427,12 +427,13 @@ vector<vector<float>> get_centroids(vector<vector<float>> &atlas_data, unsigned 
     return final_centroids;
 }
 
-vector<unsigned char> parallel_segmentation(vector<float> &atlas_data, vector<float> &subject_data,
-                                  unsigned short int ndata_fiber, vector<unsigned char> thresholds,
+vector<unsigned short> parallel_segmentation(vector<float> &atlas_data, vector<float> &subject_data,
+                                  unsigned short int ndata_fiber, vector<float> thresholds,
                                   vector<unsigned int> &bundle_of_fiber){
     unsigned int nfibers_subject = subject_data.size()/ndata_fiber;
     unsigned int nfibers_atlas = atlas_data.size()/ndata_fiber;
-    vector<unsigned char> assignment(nfibers_subject,254);
+    int contador_fibras = 1;
+    vector<unsigned short> assignment(nfibers_subject,65534);
     //vector<float> euclidean_distances(nfibers_subject,500.0);
     // unsigned int nunProc = omp_get_num_procs();
     unsigned int nunProc = omp_get_num_procs();
@@ -442,14 +443,16 @@ vector<unsigned char> parallel_segmentation(vector<float> &atlas_data, vector<fl
 
 #pragma omp for schedule(auto) nowait
         for (unsigned long i = 0; i < nfibers_subject; i++) {
+            
             float ed_i = 500;
-            char assignment_i = 254;
+            unsigned short assignment_i = 65534;
             for (unsigned int j = 0; j < nfibers_atlas; j++) {
+                //cout<< to_string(nfibers_atlas) << endl;
                 bool is_inverted, is_discarded;
                 float ed = -1;
-                char b = bundle_of_fiber[j];
+                unsigned short b = bundle_of_fiber[j];
                 //First test: discard_centers++; discard centroid
-
+                
                 is_discarded = discard_center(subject_data, atlas_data, ndata_fiber, thresholds[b], i, j);
                 if (is_discarded) continue;
 
@@ -463,6 +466,11 @@ vector<unsigned char> parallel_segmentation(vector<float> &atlas_data, vector<fl
 
                 ed = discarded_21points(subject_data, atlas_data, ndata_fiber, thresholds[b], is_inverted, i, j);
                 
+                if(thresholds[b]==thresholds[10] && ed!= -1){
+                    //cout<<to_string(contador_fibras) <<" Thres: " <<thresholds[b] << " " << to_string(ed) << endl;
+                    contador_fibras++;
+                }
+                
                 //std::cout << "holi" << std::endl;
             	//std::cout << ed << std::endl;
 
@@ -474,7 +482,7 @@ vector<unsigned char> parallel_segmentation(vector<float> &atlas_data, vector<fl
                     }
                 }
             }
-            if (assignment_i!=254) {
+            if (assignment_i!=65534) {
                 assignment[i]=assignment_i;
             }
 
@@ -494,13 +502,13 @@ int main (int argc, char *argv[])
     string atlas_path = argv[4];
     string atlas_inf = argv[5];
     string output_dir = argv[6];
-    string indices_output_dir = argv[7];
+    string indices_output_dir = "indices_out";
 
     //Number of coord of each fiber
     unsigned short int ndata_fiber = n_points*3;
 
     //Atlas data
-    vector<unsigned char> thresholds;
+    vector<float> thresholds;
     vector<string> bundles_names;
     //unsigned int nbundles_atlas;
     unsigned int nfibers_atlas = 0;
@@ -526,16 +534,16 @@ int main (int argc, char *argv[])
     //Read the subject data of .bundlesdata file
 
 
+
     subject_data = read_bundles(subject_path+"data", ndata_fiber);
 
 
-    vector<unsigned char> assignment;
+    vector<unsigned short> assignment;
     time_start_paralell = omp_get_wtime();
     //for (int i = 0; i<5; i++)
     assignment = parallel_segmentation(atlas_data,subject_data,ndata_fiber,thresholds,bundle_of_fiber);
 
-    /*std::cout << "Holi" << std::endl;
-
+    /*
     for(unsigned int v = 0; v < assignment.size(); v++){
     	std::cout << static_cast<unsigned>(assignment[v]) << std::endl;
     }*/
@@ -550,14 +558,14 @@ int main (int argc, char *argv[])
     vector<vector<float>> map_results(bundles_names.size());
     //Map assignment
     for (unsigned int j = 0; j<assignment.size();j++) {
-        if (assignment[j] != 254){
+        if (assignment[j] != 65534){
             map_results[assignment[j]].push_back(j);
         }
     }
 
     int count = 0;
     for (unsigned int i = 0; i<assignment.size();i++){
-        if (assignment[i]!=254) {
+        if (assignment[i]!=65534) {
             count++;
             // cout<<assignment[i]<<endl;
         }
@@ -572,7 +580,6 @@ int main (int argc, char *argv[])
     
     write_indices(indices_output_dir, bundles_names, map_results);
 
-    //std::cout << "holi" << std::endl;
 
     return 0;
 }
