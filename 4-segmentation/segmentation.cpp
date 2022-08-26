@@ -502,7 +502,8 @@ int main (int argc, char *argv[])
     string atlas_path = argv[4];
     string atlas_inf = argv[5];
     string output_dir = argv[6];
-    string indices_output_dir = "indices_out";
+
+    //string indices_output_dir = "indices_out";
 
     //Number of coord of each fiber
     unsigned short int ndata_fiber = n_points*3;
@@ -578,7 +579,7 @@ int main (int argc, char *argv[])
     cout<<"Total time execution: "<<final_time<<endl;
     //cout<<"Execution time of centroids: "<<time_centroids_end;
     
-    write_indices(indices_output_dir, bundles_names, map_results);
+    //write_indices(indices_output_dir, bundles_names, map_results);
 
 
     return 0;

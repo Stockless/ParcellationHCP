@@ -10,8 +10,8 @@ struct bundle sliceFiber( struct bundle fibras, int sliceNum);
 int main(int argc, char *argv[]){
     if (argc ==4){
 	    struct bundle f1,f2;
+        printf("Resampling %s\n",argv[1]);
 	    f1=read_bundle(argv[1]);
-	    
 	    int puntos = atoi(argv[3]);
 	    f2=sliceFiber(f1,puntos);
 

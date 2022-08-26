@@ -1,9 +1,0 @@
-attributes = {
-    'binary' : 1,
-    'bundles' : ['subject_to_atlas_lh_PreC_PreC_0l', 0],
-    'byte_order' : 'DCBA',
-    'curves_count' : 1423,
-    'data_file_name' : '*.bundlesdata',
-    'format' : 'bundles_1.0',
-    'space_dimension' : 3
-  }

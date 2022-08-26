@@ -160,12 +160,13 @@ meshes_path = sys.argv[1] #Data/meshes_obj/
 intersection_folder = sys.argv[2] #Data/intersections/
 labels_folder = sys.argv[3] #labels/
 parcel_names = read_names(sys.argv[4]) #atlas_parcel_names.txt
-
+thr = 300
+HemiVtxlabels_rh = read_labels(labels_folder+"rh_labels.txt")
+HemiVtxlabels_lh = read_labels(labels_folder+"lh_labels.txt")
 for sub in os.listdir(intersection_folder):    
     print(sub)
     # For right hemisphere
-    HemiVtxlabels = read_labels(labels_folder+"rh_labels.txt")
-    HemiTriangles, Lvertex = read_mesh_vtk(meshes_path+sub+'/rh.obj',HemiVtxlabels)
+    HemiTriangles, Lvertex = read_mesh_vtk(meshes_path+sub+'/rh.obj',HemiVtxlabels_rh)
 
     HemiTriangles = label_triangles(HemiTriangles)
     intersection_path = intersection_folder+sub+'/'+sub+'_right-hemi/'
@@ -174,11 +175,10 @@ for sub in os.listdir(intersection_folder):
         name = file.split(".")[:-1][0]
         numTri, InTri, FnTri, inter_in, inter_fn, fib_idx = read_intersection(intersection_path+file)
         inter = Intersection(numTri, InTri, FnTri, inter_in, inter_fn, fib_idx)
-        filter_intersections(inter,HemiTriangles,parcel_names,file,sub,output_path)
+        filter_intersections(inter,HemiTriangles,parcel_names,file,sub,output_path,thr)
 
     # For left hemisphere
-    HemiVtxlabels = read_labels(labels_folder+"lh_labels.txt")
-    HemiTriangles, Lvertex = read_mesh_vtk(meshes_path+sub+'/lh.obj',HemiVtxlabels)
+    HemiTriangles, Lvertex = read_mesh_vtk(meshes_path+sub+'/lh.obj',HemiVtxlabels_lh)
 
     HemiTriangles = label_triangles(HemiTriangles)
     intersection_path = intersection_folder+sub+'/'+sub+'_left-hemi/'
@@ -187,4 +187,4 @@ for sub in os.listdir(intersection_folder):
         name = file.split(".")[:-1][0]
         numTri, InTri, FnTri, inter_in, inter_fn, fib_idx = read_intersection(intersection_path+file)
         inter = Intersection(numTri, InTri, FnTri, inter_in, inter_fn, fib_idx)
-        filter_intersections(inter,HemiTriangles,parcel_names,file,sub,output_path)
+        filter_intersections(inter,HemiTriangles,parcel_names,file,sub,output_path,thr)

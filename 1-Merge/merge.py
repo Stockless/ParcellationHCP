@@ -14,7 +14,7 @@ if len(sys.argv) < 2:
     print("Usage: python merge.py ../subjects_dir/")
     sys.exit(0)
 
-subjects_path = sys.argv[1]
+subjects_path = sys.argv[1]+'/'
 clean = input("Clean OverSampledFibers folder after merging? (y/n): ").capitalize()
 subjects_list = os.listdir(subjects_path);
 
@@ -28,12 +28,12 @@ for subject in subjects_list:
         for fiber in fiber_points_1_3:
             all_points.append(fiber)
 
-        fiber_bun_2_3 = subjects_path+subject+'/OverSampledFibers/tractography-streamline-regularized-deterministic_2_3.bundles'
+        fiber_bun_2_3 = subjects_path+subject+'/OverSampledFibers//tractography-streamline-regularized-deterministic_2_3.bundles'
         fiber_points_2_3 = BT.read_bundle(fiber_bun_2_3)
         for fiber in fiber_points_2_3:
             all_points.append(fiber)
 
-        fiber_bun_3_3 = subjects_path+subject+'/OverSampledFibers/tractography-streamline-regularized-deterministic_3_3.bundles'
+        fiber_bun_3_3 = subjects_path+subject+'/OverSampledFibers//tractography-streamline-regularized-deterministic_3_3.bundles'
         fiber_points_3_3 = BT.read_bundle(fiber_bun_3_3)
         for fiber in fiber_points_3_3:
             all_points.append(fiber)
@@ -41,3 +41,11 @@ for subject in subjects_list:
         BT3.write_bundle(subjects_path+subject+'/tractography-streamline-regularized-deterministic_'+subject+'.bundles', all_points)
         if clean[0] == 'Y':
             shutil.rmtree(subjects_path+subject+'/OverSampledFibers/')
+    # For non merged bundles
+    # all_points = []
+    # for file in os.listdir(subjects_path+"/"+subject+"/non_merged/"):
+    #     if file.endswith(".bundles"):
+    #         fiber_points = BT.read_bundle(subjects_path+"/"+subject+"/non_merged/"+file)
+    #         for fiber in fiber_points:
+    #             all_points.append(fiber)
+    # BT3.write_bundle(subjects_path+"/"+subject+"/merged_"+subject+".bundles", all_points)

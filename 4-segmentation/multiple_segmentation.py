@@ -4,7 +4,7 @@ import os
 import shutil
 
 if len(sys.argv) <= 3:
-    print("Usage: python multiple_transform.py ../subjects_dir/ folder/to/atlas/bundles/ atlas/folder/atlas_info.txt")
+    print("Usage: python multiple_segmentation.py ../subjects_dir/ folder/to/atlas/bundles/ atlas/folder/atlas_info.txt")
     sys.exit(0)
 subjs_dir = sys.argv[1] #Data/subs
 atlas_bundles = sys.argv[2] #atlas/bundles

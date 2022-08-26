@@ -129,10 +129,8 @@ def create_fusion_list(anatomic_parcel,dc_thr,thr_idc,names):
                 triangles1 = sparcel1.get_triangles_prob(dc_thr, sparcel1.label)
                 triangles2 = sparcel2.get_triangles_prob(dc_thr, sparcel2.label)
                 inter = intersection(triangles1, triangles2)
-                if (len(sparcel1.triangles)) > len(sparcel2.triangles):
-                    idc = len(inter) / len(sparcel2.triangles) 
-                else:
-                    idc = len(inter) / len(sparcel1.triangles)
+                min_inter = min(len(sparcel1.triangles),len(sparcel2.triangles))
+                idc = len(inter) / min_inter
                 if idc >= thr_idc:
                     connect_graph.add_edge(sparcel1,sparcel2)
                     idc_matrix[sparcel1.label][sparcel2.label] = idc
@@ -182,7 +180,6 @@ def remove_small_parcels(aparcels,anatomic_parcel,parcel_names,size_thr):
 def processing_parcels(aparcels,idc,dc_thr,size_thr,parcel_names,trac,trac_path,hemi):
     n_remove = 0
     for i,anatomic_parcel in enumerate(aparcels):
-        # print("Processing parcel: ",anatomic_parcel.label)
         if len(anatomic_parcel.sub_parcels) > 0:
             if trac == "y":
                 fusion_file = open(trac_path+"/"+hemi+"fusion.txt","a+")
@@ -297,21 +294,19 @@ def main():
     idc = args.idc 
     dc_thr = args.dc_thr 
     size_thr = args.size_thr 
-
+    print(len(Lparcel_names),len(Rparcel_names))
     if trac == "y":
         for aparcel in Lanatomic_parcels:
             recalc_probability(aparcel)
         for aparcel in Ranatomic_parcels:
             recalc_probability(aparcel)
-        # IO.write_atlas(Lanatomic_parcels, Lparcel_names,Ltriangles, trac_path,True,"L")
-        # IO.write_atlas(Ranatomic_parcels, Rparcel_names,Rtriangles, trac_path,True,"R")
+        IO.write_atlas(Lanatomic_parcels, Lparcel_names,Ltriangles, trac_path,True,"L")
+        IO.write_atlas(Ranatomic_parcels, Rparcel_names,Rtriangles, trac_path,True,"R")
     t1 = time.time()
 
     print("Processing parcels")
     Lanatomic_parcels = processing_parcels(Lanatomic_parcels,idc,dc_thr,size_thr,Lparcel_names,trac,trac_path,"L")
     Ranatomic_parcels = processing_parcels(Ranatomic_parcels,idc,dc_thr,size_thr,Rparcel_names,trac,trac_path,"R")
-    IO.write_atlas(Lanatomic_parcels, Lparcel_names,Ltriangles, trac_path,True,"L")
-    IO.write_atlas(Ranatomic_parcels, Rparcel_names,Rtriangles, trac_path,True,"R")
     print("Obtaining hard parcels")
     Lanatomic_parcels = get_hard_parcels(Lanatomic_parcels,Lparcel_names)
     Ranatomic_parcels = get_hard_parcels(Ranatomic_parcels,Rparcel_names)

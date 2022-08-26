@@ -37,7 +37,7 @@ Lhemi_path = sys.argv[1] ; # 'lh.obj' or 'rh.obj'
 Intersection_path = sys.argv[2]; # e.g: 'aligned_lh_AR_ANT.txt'
 Lvertex, Lpolygons = BT.read_mesh_obj(Lhemi_path)
 Lhemi = vt.Polygon(Lvertex, Lpolygons);
-Lhemi.setOpacity(0.5)
+Lhemi.setOpacity(0.6)
 
 InTri, FnTri, InPoints, FnPoints, fib_index = read_intersection(Intersection_path)
 

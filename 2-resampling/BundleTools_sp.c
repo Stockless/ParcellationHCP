@@ -44,7 +44,6 @@ struct bundle read_bundle(char* bunfile){
 
     char* bunfileb;
     bunfileb = masdata(bunfile);
-
     FILE *fp;
     fp = fopen(bunfileb, "rb");
     if (fp == NULL) {fputs ("File error",stderr); exit (1);}

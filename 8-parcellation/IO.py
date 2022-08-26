@@ -100,7 +100,7 @@ def read_mesh_obj(mesh_path,vertex_labels):
     return np.asarray(triangles)
 
 
-def read_intersection_file(infile,subject_name,name,parcel_names,triangles,anatomic_parcels):
+def assign_preliminary_subparcels(infile,subject_name,name,parcel_names,triangles,anatomic_parcels):
     with open(infile) as f:
         content = f.readlines()
         if (content[0] != '0\n'):
@@ -193,7 +193,7 @@ def preliminary_subparcels(intersection_path,parcel_names,triangles,anatomic_par
         intersectionDir.sort()
         for file in intersectionDir:
             file_path = intersection_path+"/"+subj_dir+"/"+subj_dir.split("_")[0]+"_"+selected_hemi+"/"+file
-            anatomic_parcels,parcel_names = read_intersection_file(file_path,subject_name,file,parcel_names,triangles,anatomic_parcels)
+            anatomic_parcels,parcel_names = assign_preliminary_subparcels(file_path,subject_name,file,parcel_names,triangles,anatomic_parcels)
     return anatomic_parcels,parcel_names
 
 

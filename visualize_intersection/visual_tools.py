@@ -277,9 +277,9 @@ def visual_allpoints(all_points,mesh=False,in_tri=False,fn_tri=False):
     
     if mesh:
         myActors.append(mesh)
-    if fn_tri:
-        myActors.append(in_tri)
-        myActors.append(fn_tri)
+    # if fn_tri:
+    #     myActors.append(in_tri)
+    #     myActors.append(fn_tri)
     showPolygons(myActors);
     
 def visual_centroids(cen_points):

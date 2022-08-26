@@ -8,7 +8,6 @@ if len(sys.argv) < 2:
     sys.exit(1)
 clean = input("Clean not aligned files? (y/n): ").capitalize()
 subjs_dir = sys.argv[1]
-subs = len(os.listdir(subjs_dir))
 for sub in os.listdir(subjs_dir):
     print("Aligning subject "+sub)
     sub_dir = subjs_dir+"/"+sub+"/segmented_T1/"
